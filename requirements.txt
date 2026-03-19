@@ -1,0 +1,63 @@
+# Hirsch Music Engine - Python Dependencies
+
+# ===== Core Framework =====
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+python-multipart==0.0.6
+aiofiles==23.2.1
+pydantic==2.5.3
+pydantic-settings==2.1.0
+pyyaml==6.0.1
+
+# ===== Music Generation =====
+# MusicGen (Facebook/Meta)
+audiocraft==1.3.0
+torch>=2.1.0
+torchaudio>=2.1.0
+
+# AudioLDM (Alternative/Addon)
+# audioldm==0.1.0  # Uncomment wenn du AudioLDM nutzen willst
+
+# ===== Voice Cloning & TTS =====
+TTS==0.21.0  # Coqui TTS für Voice Cloning
+so-vits-svc-fork  # Alternative: SoVITS für Singing Voice
+pydub==0.25.1
+
+# ===== Stem Separation =====
+demucs==4.0.1  # Meta's Demucs für Stem Splitter
+# audio-separator  # Alternative: MDX-Net wrapper
+
+# ===== Audio Processing =====
+librosa==0.10.1
+soundfile==0.12.1
+numpy>=1.24.0,<2.0.0
+scipy==1.11.4
+pedalboard==0.9.1  # für Mixing/Mastering Effects
+
+# ===== LLM & Text Processing =====
+# Lokale LLMs (wähle EINE der Optionen):
+transformers==4.37.0
+sentencepiece==0.1.99
+acceleate==0.26.1
+bitsandbytes==0.42.0  # für quantisierte Modelle
+
+# Oder externe APIs:
+# openai==1.10.0  # für OpenAI API
+# anthropic==0.18.1  # für Claude API
+
+# ===== Music Analysis =====
+essentia==2.1b6.dev1110  # BPM/Key/Chord Detection
+madmom==0.17.dev0  # Beat Tracking
+chordino-py  # Chord Recognition
+
+# ===== Utilities =====
+requests==2.31.0
+python-dotenv==1.0.0
+rich==13.7.0  # Beautiful Console Output
+tqdm==4.66.1
+
+# ===== Development (optional) =====
+pytest==7.4.4
+pytest-asyncio==0.23.3
+black==24.1.1
+ruff==0.1.14
