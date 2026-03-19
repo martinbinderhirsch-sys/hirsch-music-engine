@@ -1,0 +1,181 @@
+# Hirsch Music Engine - Konfiguration
+# Kopiere diese Datei zu 'config.yaml' und passe sie an
+
+# ===== Server Einstellungen =====
+server:
+  host: "0.0.0.0"  # 0.0.0.0 für alle Interfaces, 127.0.0.1 nur lokal
+  port: 8000
+  reload: true  # Hot-Reload im Development Mode
+  log_level: "info"  # debug, info, warning, error
+
+# ===== Modell-Backend =====
+models:
+  # Musik-Generator (wähle einen):
+  music_backend: "musicgen"  # "musicgen" oder "audioldm"
+  
+  # MusicGen Settings
+  musicgen:
+    model_size: "medium"  # small, medium, large, melody
+    use_sampling: true
+    top_k: 250
+    top_p: 0.0
+    temperature: 1.0
+    cfg_coef: 3.0  # Classifier-free guidance
+    
+  # AudioLDM Settings (falls genutzt)
+  audioldm:
+    model: "audioldm-l-full"  # audioldm-s, audioldm-m, audioldm-l-full
+    guidance_scale: 3.5
+    ddim_steps: 200
+  
+  # LLM für Lyrics & Prompts
+  llm_provider: "local"  # "local", "openai", "anthropic"
+  llm_model: "mistral-7b-instruct"  # Modellname
+  
+  # Falls externe API:
+  openai_api_key: ""  # Optional: sk-...
+  anthropic_api_key: ""  # Optional: sk-ant-...
+
+# ===== Voice Cloning & TTS =====
+voice:
+  engine: "coqui"  # "coqui" (TTS) oder "sovits"
+  
+  # Coqui TTS Settings
+  tts_model: "tts_models/multilingual/multi-dataset/xtts_v2"  # Unterstützt DE & EN
+  speaker_wav: ""  # Pfad zu Referenz-Audio für Voice Cloning (optional)
+  language: "de"  # "de" oder "en"
+  
+  # Singing Voice Settings
+  enable_singing: true  # Versuche Vocals für Gesang zu optimieren
+  pitch_shift: 0  # Halbtöne +/-
+  vibrato: 0.3  # 0.0 - 1.0
+
+# ===== Audio Processing =====
+audio:
+  sample_rate: 44100  # Standard: 44.1 kHz
+  bit_depth: 16
+  channels: 2  # Stereo
+  
+  # Max. Song-Länge
+  max_duration: 480  # Sekunden (8 Minuten wie TopMediai)
+  
+  # Normalisierung
+  normalize: true
+  target_loudness: -14.0  # LUFS (Spotify Standard)
+
+# ===== Stem Separation =====
+stem_separation:
+  enabled: true
+  model: "htdemucs"  # "htdemucs", "htdemucs_ft", "mdx_extra"
+  device: "cuda"  # "cuda" (GPU) oder "cpu"
+  stems:
+    - vocals
+    - drums
+    - bass
+    - other  # guitars, keys, etc.
+  
+  # Qualität vs. Speed
+  shifts: 1  # 1-10, höher = besser aber langsamer
+  overlap: 0.25
+
+# ===== Output & Projects =====
+output:
+  projects_dir: "./projects"  # Wo generierte Songs gespeichert werden
+  
+  # Audio-Formate
+  stems_format: "wav"  # wav, flac
+  mix_format: "wav"  # wav, mp3, flac
+  mp3_bitrate: 320  # kbps (falls mp3)
+  
+  # Metadaten
+  embed_metadata: true
+  include_prompt: true  # Prompt in metadata speichern
+
+# ===== Lyrics Engine =====
+lyrics:
+  # Automatische Struktur-Erkennung
+  auto_structure: true
+  default_structure:
+    - intro
+    - verse
+    - pre_chorus
+    - chorus
+    - verse
+    - pre_chorus
+    - chorus
+    - bridge
+    - chorus
+    - outro
+  
+  # Reim & Metrik
+  rhyme_strictness: 0.7  # 0.0 - 1.0
+  syllable_tolerance: 1  # +/- Silben pro Zeile
+  
+  # Sprachen
+  supported_languages:
+    - de
+    - en
+
+# ===== Song Fusion (Hirsch-DNA) =====
+fusion:
+  # Musik-Analyse für Referenz-Songs
+  analyze_bpm: true
+  analyze_key: true
+  analyze_chords: true
+  analyze_energy: true
+  
+  # Gewichtung bei Multi-Style-Mix
+  blend_method: "weighted"  # "weighted" oder "layered"
+
+# ===== Caching =====
+cache:
+  enabled: true
+  dir: "./cache"
+  
+  # Model-Caches
+  cache_models: true
+  cache_audio: false  # Generierte Songs NICHT cachen
+
+# ===== Performance =====
+performance:
+  device: "cuda"  # "cuda" (GPU), "cpu", oder "mps" (Apple Silicon)
+  
+  # Multi-Processing
+  num_workers: 4
+  batch_size: 1  # Normalerweise 1 für Musik-Gen
+  
+  # Memory Management
+  use_fp16: true  # Half-Precision (schneller, weniger RAM)
+  offload_to_cpu: false  # Models zu CPU wenn nicht genutzt
+
+# ===== Entwicklung & Debugging =====
+debug:
+  save_intermediate: false  # Zwischen-Schritte speichern (BPM-Detection etc.)
+  verbose_logging: false
+  profile_performance: false
+
+# ===== Genres & Styles (Presets) =====
+genre_presets:
+  outlaw_country:
+    bpm_range: [80, 110]
+    key_preference: ["A", "D", "E", "G"]
+    instruments: ["acoustic_guitar", "slide_guitar", "harmonica", "bass", "drums"]
+    vibe: "dark, rebellious, storytelling"
+  
+  industrial_rock:
+    bpm_range: [100, 140]
+    key_preference: ["E", "A", "D"]
+    instruments: ["distorted_guitar", "synth", "heavy_drums", "bass"]
+    vibe: "aggressive, mechanical, powerful"
+  
+  german_rap:
+    bpm_range: [85, 95]
+    key_preference: ["Cm", "Gm", "Dm"]
+    instruments: ["808_bass", "hi_hats", "synth", "piano"]
+    vibe: "direct, hard-hitting, street"
+  
+  protest_folk:
+    bpm_range: [70, 90]
+    key_preference: ["D", "G", "C", "Am"]
+    instruments: ["acoustic_guitar", "vocals", "harmonica"]
+    vibe: "raw, honest, political"
